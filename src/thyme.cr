@@ -1,6 +1,5 @@
-# TODO: Write documentation for `Thyme`
-module Thyme
-  VERSION = "0.1.0"
+require "./thyme/**"
 
-  # TODO: Put your code here
+module Thyme
+  VERSION = {{ `shards version "#{__DIR__}"`.chomp.stringify }}
 end

@@ -74,12 +74,11 @@ make run ARGS=-h            # to run with local arguments
 
 ## TODO
 
-* setup version macro
 * setup end to end CLI
-* setup Makefile
 * add Options class to keep track of options
 * add reading thymerc file and setting options
 * add basic timer
+* add running as daemon
 * add stopping
 * add pause/unpause
 * add repeating
