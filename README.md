@@ -74,10 +74,9 @@ make run ARGS=-h            # to run with local arguments
 
 ## TODO
 
-* setup end to end CLI
+* add basic timer
 * add Options class to keep track of options
 * add reading thymerc file and setting options
-* add basic timer
 * add running as daemon
 * add stopping
 * add pause/unpause
@@ -95,6 +94,7 @@ make run ARGS=-h            # to run with local arguments
 * add notification customization, eg custom command/text/title
 * options extension, passing arguments to flags
 * hooks extension, passing arguments (eg repeat current/total)
+* optimize timer, store in single label string
 
 ## License
 
