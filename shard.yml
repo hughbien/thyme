@@ -1,0 +1,13 @@
+name: thyme
+version: 0.1.0
+
+authors:
+  - Hugh Bien <hugh@hughbien.com>
+
+targets:
+  thyme:
+    main: src/thyme.cr
+
+crystal: 0.33.0
+
+license: MIT
