@@ -30,6 +30,7 @@ Configure via the `~/.thymerc` file:
 ```toml
 timer = 1500           # 25 minutes per pomodoro (in seconds)
 timer_break = 300      # 5 minutes per break (in seconds)
+repeat = 4             # set default for -r flag, otherwise repeat indefinitely
 warning = 300          # show warning color at 5 minutes left (in seconds), set to 0 to disable
 status_align = "left"  # use tmux's left status line instead, defaults to "right"
 ```
@@ -76,7 +77,6 @@ make run ARGS=-h            # to run with local arguments
 
 * move Options class to Config
 * add reading thymerc file and setting configs
-* add repeating
 * add warning (or other way to distinguish normal vs break timer)
 * reset tmux status at end of session
 * add options extension

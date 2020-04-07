@@ -29,7 +29,7 @@ class Thyme::Command
   end
 
   private def start
-    Daemon.start!
+    #Daemon.start!
     ProcessHandler.write_pid
 
     timer = Thyme::Timer.new
