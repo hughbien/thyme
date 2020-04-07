@@ -63,10 +63,15 @@ command = "vim ~/path/to/todo.md"
 
 [options.hello]
 flag = "-H"
-fag_long = "--hello"
+flag_long = "--hello name"
 description = "Say hello!"
-command = "echo Hello"
+command = "echo \"Hello #{flag}! #{args}.\"" # eg `thyme -H John "How are you?"`
 ```
+
+The following placeholders are available for options:
+
+* `#{flag}` - the argument passed to your flag
+* `#{args}` - any additional arguments passed to the thyme binary
 
 Custom hooks can be added via the `[hooks.<hook_type>.*]` group. Valid hook types are: `before`/`after` a pomodoro, `before_break`/`after_break` for breaks, and `before_all`/`after_all` for the entire session.
 
