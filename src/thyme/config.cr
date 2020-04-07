@@ -25,7 +25,7 @@ class Thyme::Config
     @timer = validate!("timer", as_u32) if has?("timer")
     @timer_break = validate!("timer_break", as_u32) if has?("timer_break")
     @timer_warning = validate!("timer_warning", as_u32) if has?("timer_warning")
-    @repeat = validate!("repeat", as_u32) if has?("repeat")
+    validate!("repeat", as_u32) if has?("repeat") # only sets if `-r` flag is given
 
     @color_default = validate!("color_default", as_str) if has?("color_default")
     @color_warning = validate!("color_warning", as_str) if has?("color_warning")
@@ -33,6 +33,18 @@ class Thyme::Config
 
     @status_align = validate!("status_align", as_str) if has?("status_align")
     @status_file = validate!("status_file", as_str) if has?("status_file")
+  end
+
+  def set_repeat(count : String | Nil = nil)
+    if count
+      @repeat = count.to_u32
+    elsif has?("repeat")
+      @repeat = toml["repeat"].as(Int64).to_u32
+    else
+      @repeat = 0
+    end
+  rescue error : ArgumentError
+    raise Error.new("Invalid value for `repeat`: #{count}")
   end
 
   def self.parse(file = THYMERC_FILE)

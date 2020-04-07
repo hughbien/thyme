@@ -9,12 +9,18 @@ class Thyme::Command
   end
 
   def run
+    config = Config.parse
+    # see https://github.com/crystal-lang/crystal/issues/5338
+    # OptionParser can't handle optional flag argument for now
+    config.set_repeat if args.any?(Set{"-r", "--repeat"})
+
     parser = OptionParser.parse(args) do |parser|
       parser.banner = "Usage: thyme [options]"
 
-      parser.on("-h", "--help", "Print this help message") { print_help(parser); exit }
-      parser.on("-v", "--version", "Print version") { print_version; exit }
-      parser.on("-s", "--stop", "Stop timer") { stop; exit }
+      parser.on("-h", "--help", "print help message") { print_help(parser); exit }
+      parser.on("-v", "--version", "print version") { print_version; exit }
+      parser.on("-s", "--stop", "stop timer") { stop; exit }
+      parser.on("-r", "--repeat [count]", "repeat timer") { |r| config.set_repeat(r) }
     end
 
     if args.size > 0
@@ -22,18 +28,17 @@ class Thyme::Command
     elsif ProcessHandler.running?
       SignalHandler.send_toggle
     else
-      start
+      start(config)
     end
   rescue error : OptionParser::InvalidOption | Error
     io.puts(error)
   end
 
-  private def start
+  private def start(config : Config)
     #Daemon.start!
     ProcessHandler.write_pid
 
-    config = Thyme::Config.parse
-    timer = Thyme::Timer.new(config)
+    timer = Timer.new(config)
     SignalHandler.on_stop { timer.stop }
     SignalHandler.on_toggle { timer.toggle }
     timer.run

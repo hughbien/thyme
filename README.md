@@ -106,7 +106,6 @@ make run ARGS=-h             # to run with local arguments
 ## TODO
 
 * add StatusAlign enum
-* add --repeat option
 * add hooks extension with placeholders (repeat index/total/suffix)
 * handle `status_align` and `status_file` configs
 * reset tmux status at end of session
