@@ -91,6 +91,7 @@ make run ARGS=-h            # to run with local arguments
 
 ## TODO
 
+* refactor Timer: clean up instance vs local/getters
 * move Options class to Config
 * add reading thymerc file and setting configs
 * reset tmux status at end of session

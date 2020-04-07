@@ -37,7 +37,9 @@ class Thyme::Timer
         return
       end
 
-      tmux.set_status(format(time_remaining, repeat_index, on_break)) unless @pause_time
+      tmux.set_status(
+        Format.status(time_remaining, repeat_index, @repeat_total, on_break)
+      ) unless @pause_time
       sleep(1)
     end
   end
@@ -58,37 +60,5 @@ class Thyme::Timer
 
   private def time_remaining
     end_time - Time.local
-  end
-
-  private def format(span : Time::Span, repeat_index, on_break)
-    seconds = span.seconds >= 10 ? span.seconds : "0#{span.seconds}"
-    format_colors(
-      "#{span.minutes}:#{seconds}#{format_repeat(repeat_index)}",
-      tmux_color(span.seconds, on_break)
-    )
-  end
-
-  private def format_repeat(repeat_index)
-    if @repeat_total == 1
-      ""
-    elsif @repeat_total == 0 # unlimited
-      " (#{repeat_index})"
-    else
-      " (#{repeat_index}/#{@repeat_total})"
-    end
-  end
-
-  private def format_colors(label, color = "default")
-    "#[fg=#{color}]#{label}#[default]"
-  end
-
-  private def tmux_color(seconds, on_break)
-    if on_break
-      "default"
-    elsif seconds <= 5
-      "red"
-    else
-      "default"
-    end
   end
 end
