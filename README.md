@@ -51,56 +51,62 @@ Then set tmux to read from it:
 set -g status-right '#(cat /path/to/thyme-status)'
 ```
 
-Custom options can be added via the `[options]` section. The example below adds a `-t` option for
+Custom options can be added via the `[options.*]` group. The example below adds a `-t` option for
 opening a todo today file.
 
 ```toml
-[options]
-  [today]
-  flag = "-t"
-  flag_long = "--today"
-  description = "Open TODO today file"
-  command = "vim ~/path/to/todo.md"
+[options.today]
+flag = "-t"
+flag_long = "--today"
+description = "Open TODO today file"
+command = "vim ~/path/to/todo.md"
+
+[options.hello]
+flag = "-H"
+fag_long = "--hello"
+description = "Say hello!"
+command = "echo Hello"
 ```
 
-Hooks can be added to run `before`/`after` a pomodoro, `before_break`/`after_break` for breaks,
-and `before_all`/`after_all` for the entire session.
+Custom hooks can be added via the `[hooks.<hook_type>.*]` group. Valid hook types are: `before`/`after` a pomodoro, `before_break`/`after_break` for breaks, and `before_all`/`after_all` for the entire session.
 
 ```toml
-[hooks]
-  [after]
-  command = "terminal-notifier -message \"Pomodoro finished!\" -title \"Thyme\""
+[hooks.after.notify]
+command = "terminal-notifier -message \"Pomodoro finished #{repeat_suffix}\" -title \"thyme\""
 
-  [after_break]
-  command = "terminal-notifier -message \"Break finished!\" -title \"Thyme\""
+[hooks.after_break.notify]
+command = "terminal-notifier -message \"Break finished #{repeat_suffix}\" -title \"thyme\""
 ```
+
+The following placeholders are available for hooks:
+
+* `#{repeat_index}` - current repeat index
+* `#{repeat_total}` - total repeat count for this session
+* `#{repeat_suffix}` - if repeating is on, will return `(index/total)` eg `(3/5)`. Otherwise empty string.
 
 ## Development
 
 Use `make` for common tasks:
 
 ```
-make spec                   # to run all tests
-make spec ARGS=path/to/spec # to run a single test
-make build                  # to create a release binary in the target directory
-make install                # to copy release binary into system bin (uses $INSTALL_BIN)
-make clean                  # to remove build artifacts and target directory
-make run                    # to run locally
-make run ARGS=-h            # to run with local arguments
+make spec                    # to run all tests
+make spec ARGS=path/to/spec  # to run a single test
+make build                   # to create a release binary in the target directory
+make install                 # to copy release binary into system bin (uses $INSTALL_BIN)
+make clean                   # to remove build artifacts and target directory
+make run                     # to run locally
+make run ARGS=-h             # to run with local arguments
 ```
 
 ## TODO
 
-* add reading thymerc file and setting configs
+* add reading thymerc file
+* add --repeat option
+* add hooks extension with placeholders (repeat index/total/suffix)
+* handle `status_align` and `status_file` configs
 * reset tmux status at end of session
-* add option to print to file instead of sending to tmux
 * add options extension
-* add hooks extension
-* add notification (terminal-notifier, osascript, growl, or handle via hooks)
-* add notification customization, eg custom command/text/title
-* options extension, passing arguments to flags
-* hooks extension, passing arguments (eg repeat current/total)
-* optimize timer, store in single label string
+* optimize timer label, store in single update-able string
 
 ## License
 
