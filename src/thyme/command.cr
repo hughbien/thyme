@@ -1,4 +1,5 @@
 require "../thyme"
+require "option_parser"
 
 class Thyme::Command
   private getter args : Array(String)
@@ -8,6 +9,46 @@ class Thyme::Command
   end
 
   def run
-    Thyme::Timer.new.run
+    parser = OptionParser.parse(args) do |parser|
+      parser.banner = "Usage: thyme [options]"
+
+      parser.on("-h", "--help", "Print this help message") { print_help(parser); exit }
+      parser.on("-v", "--version", "Print version") { print_version; exit }
+      parser.on("-s", "--stop", "Stop timer") { stop; exit }
+    end
+
+    if args.size > 0
+      print_help(parser)
+    elsif ProcessHandler.running?
+      SignalHandler.send_toggle
+    else
+      start
+    end
+  rescue error : OptionParser::InvalidOption | Error
+    io.puts(error)
+  end
+
+  private def start
+    Daemon.start!
+    ProcessHandler.write_pid
+
+    timer = Thyme::Timer.new
+    SignalHandler.on_stop { timer.stop }
+    SignalHandler.on_toggle { timer.toggle }
+    timer.run
+  end
+
+  private def stop
+    SignalHandler.send_stop if ProcessHandler.running?
+  ensure
+    ProcessHandler.delete_pid
+  end
+
+  private def print_help(parser)
+    io.puts(parser)
+  end
+
+  private def print_version
+    io.puts(VERSION)
   end
 end

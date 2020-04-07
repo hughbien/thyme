@@ -74,12 +74,8 @@ make run ARGS=-h            # to run with local arguments
 
 ## TODO
 
-* add basic timer
-* add Options class to keep track of options
-* add reading thymerc file and setting options
-* add running as daemon
-* add stopping
-* add pause/unpause
+* move Options class to Config
+* add reading thymerc file and setting configs
 * add repeating
 * add warning (or other way to distinguish normal vs break timer)
 * reset tmux status at end of session
