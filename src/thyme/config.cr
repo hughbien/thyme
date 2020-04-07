@@ -4,7 +4,7 @@ require "toml"
 class Thyme::Config
   THYMERC_FILE = "#{ENV["HOME"]}/.thymerc"
 
-  getter toml : TOML::Table
+  private getter toml : TOML::Table
 
   getter timer : UInt32 = (25 * 60).to_u32
   getter timer_break : UInt32 = (5 * 60).to_u32
@@ -17,6 +17,8 @@ class Thyme::Config
 
   getter status_align : String = "right"
   getter status_file : String | Nil
+
+  getter hooks : HookCollection = HookCollection.new
 
   def initialize(@toml : TOML::Table)
     as_u32 = ->(v : TOML::Type) { v.as(Int64).to_u32 }
@@ -33,6 +35,8 @@ class Thyme::Config
 
     @status_align = validate!("status_align", as_str) if has?("status_align")
     @status_file = validate!("status_file", as_str) if has?("status_file")
+
+    @hooks = HookCollection.parse(toml["hooks"]) if has?("hooks")
   end
 
   def set_repeat(count : String | Nil = nil)
@@ -50,6 +54,8 @@ class Thyme::Config
   def self.parse(file = THYMERC_FILE)
     toml = TOML.parse(File.exists?(file) ? File.read(file) : "")
     Thyme::Config.new(toml)
+  rescue error : TOML::ParseException
+    raise Error.new("Unable to parse `#{THYMERC_FILE}` -- #{error.to_s}")
   end
 
   private def has?(key)

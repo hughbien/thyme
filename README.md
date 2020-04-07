@@ -73,13 +73,15 @@ The following placeholders are available for options:
 * `#{flag}` - the argument passed to your flag
 * `#{args}` - any additional arguments passed to the thyme binary
 
-Custom hooks can be added via the `[hooks.<hook_type>.*]` group. Valid hook types are: `before`/`after` a pomodoro, `before_break`/`after_break` for breaks, and `before_all`/`after_all` for the entire session.
+Custom hooks can be added via the `[hooks.*]` group. Valid events are: `before`/`after` a pomodoro, `before_break`/`after_break` for breaks, and `before_all`/`after_all` for the entire session.
 
 ```toml
-[hooks.after.notify]
+[hooks.notify]
+events = ["after"]
 command = "terminal-notifier -message \"Pomodoro finished #{repeat_suffix}\" -title \"thyme\""
 
-[hooks.after_break.notify]
+[hooks.notify_break]
+events = ["after_break"]
 command = "terminal-notifier -message \"Break finished #{repeat_suffix}\" -title \"thyme\""
 ```
 
@@ -106,7 +108,6 @@ make run ARGS=-h             # to run with local arguments
 ## TODO
 
 * add StatusAlign enum
-* add hooks extension with placeholders (repeat index/total/suffix)
 * handle `status_align` and `status_file` configs
 * reset tmux status at end of session
 * add options extension

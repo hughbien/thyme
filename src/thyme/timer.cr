@@ -41,6 +41,15 @@ class Thyme::Timer
   private def run_single(repeat_index, on_break = false)
     return if @stop
 
+    repeat_suffix = Format.repeat_suffix(repeat_index, @config.repeat)
+    hooks_args = {
+      repeat_index: repeat_index,
+      repeat_total: @config.repeat,
+      repeat_suffix: repeat_suffix.strip
+    }
+    @config.hooks.before_all(hooks_args) if repeat_index == 1 && !on_break
+    on_break ? @config.hooks.before_break(hooks_args) : @config.hooks.before(hooks_args)
+
     @end_time = Time.local + (on_break ? @config.timer_break : @config.timer).seconds
     while Time.local < @end_time
       if @stop
@@ -49,10 +58,13 @@ class Thyme::Timer
       end
 
       @tmux.set_status(
-        Format.status(time_remaining, repeat_index, on_break, @config)
+        Format.status(time_remaining, repeat_suffix, on_break, @config)
       ) unless @pause_time
       sleep(1)
     end
+
+    on_break ? @config.hooks.after_break(hooks_args) : @config.hooks.after(hooks_args)
+    @config.hooks.after_all(hooks_args) if repeat_index == @config.repeat && !on_break
   end
 
   private def time_remaining
