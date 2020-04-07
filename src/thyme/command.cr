@@ -32,10 +32,14 @@ class Thyme::Command
     #Daemon.start!
     ProcessHandler.write_pid
 
-    timer = Thyme::Timer.new
+    config = Thyme::Config.parse
+    timer = Thyme::Timer.new(config)
     SignalHandler.on_stop { timer.stop }
     SignalHandler.on_toggle { timer.toggle }
     timer.run
+  rescue error : Error
+    io.puts(error)
+    ProcessHandler.delete_pid
   end
 
   private def stop

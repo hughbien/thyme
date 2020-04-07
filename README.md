@@ -91,17 +91,11 @@ make run ARGS=-h            # to run with local arguments
 
 ## TODO
 
-* refactor Timer: clean up instance vs local/getters
-* move Options class to Config
 * add reading thymerc file and setting configs
 * reset tmux status at end of session
 * add option to print to file instead of sending to tmux
 * add options extension
 * add hooks extension
-* determine which option for tmux status setting:
-  1. call `tmux set-option ...` directly from thyme process
-  2. have tmux poll thyme process
-  3. have tmux poll intermediate `~/.thyme-tmux` file
 * add notification (terminal-notifier, osascript, growl, or handle via hooks)
 * add notification customization, eg custom command/text/title
 * options extension, passing arguments to flags

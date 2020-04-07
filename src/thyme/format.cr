@@ -3,11 +3,11 @@ require "../thyme"
 module Thyme::Format
   extend self
 
-  def status(span : Time::Span, repeat_index, repeat_total, on_break)
+  def status(span : Time::Span, repeat_index, repeat_total, on_break, timer_warning)
     seconds = span.seconds >= 10 ? span.seconds : "0#{span.seconds}"
     with_color(
       "#{span.minutes}:#{seconds}#{repeat_suffix(repeat_index, repeat_total)}",
-      tmux_color(span.seconds, on_break)
+      tmux_color(span.total_seconds, on_break, timer_warning)
     )
   end
 
@@ -25,10 +25,10 @@ module Thyme::Format
     "#[fg=#{color}]#{text}#[default]"
   end
 
-  def tmux_color(seconds, on_break)
+  def tmux_color(total_seconds, on_break, timer_warning)
     if on_break
       "default"
-    elsif seconds <= 5
+    elsif total_seconds <= timer_warning
       "red"
     else
       "default"

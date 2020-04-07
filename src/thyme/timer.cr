@@ -1,24 +1,24 @@
 require "../thyme"
 
 class Thyme::Timer
+  @config : Config
   @tmux : Tmux
   @stop : Bool = false
-  @repeat_total : Int32 = 5
   @end_time : Time
   @pause_time : Time | Nil
 
-  def initialize
+  def initialize(@config)
     @tmux = Tmux.new
-    @end_time = Time.local + (25*60).seconds
+    @end_time = Time.local + @config.timer.seconds
   end
 
   def run
     repeat_index = 1
-    while @repeat_total == 0 || repeat_index <= @repeat_total
+    while @config.repeat == 0 || repeat_index <= @config.repeat
       break if @stop
 
       run_single(repeat_index)
-      run_single(repeat_index, true) unless repeat_index == @repeat_total
+      run_single(repeat_index, true) unless repeat_index == @config.repeat
       repeat_index += 1
     end
     @tmux.set_status("")
@@ -41,7 +41,7 @@ class Thyme::Timer
   private def run_single(repeat_index, on_break = false)
     return if @stop
 
-    @end_time = Time.local + ((on_break ? 1 : 2) * 5).seconds
+    @end_time = Time.local + (on_break ? @config.timer_break : @config.timer).seconds
     while Time.local < @end_time
       if @stop
         @tmux.set_status("")
@@ -49,7 +49,13 @@ class Thyme::Timer
       end
 
       @tmux.set_status(
-        Format.status(time_remaining, repeat_index, @repeat_total, on_break)
+        Format.status(
+          time_remaining,
+          repeat_index,
+          @config.repeat,
+          on_break,
+          @config.timer_warning
+        )
       ) unless @pause_time
       sleep(1)
     end
