@@ -8,7 +8,7 @@ class Thyme::Timer
   @pause_time : Time | Nil
 
   def initialize(@config)
-    @tmux = Tmux.new(@config)
+    @tmux = Tmux.for(@config)
     @end_time = Time.local + @config.timer.seconds
   end
 
@@ -21,7 +21,7 @@ class Thyme::Timer
       run_single(repeat_index, true) unless repeat_index == @config.repeat
       repeat_index += 1
     end
-    @tmux.set_status("")
+    @tmux.reset_status
   end
 
   def stop
@@ -53,7 +53,7 @@ class Thyme::Timer
     @end_time = Time.local + (on_break ? @config.timer_break : @config.timer).seconds
     while Time.local < @end_time
       if @stop
-        @tmux.set_status("")
+        @tmux.reset_status
         return
       end
 

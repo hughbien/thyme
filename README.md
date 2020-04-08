@@ -21,6 +21,7 @@ thyme       # run again to pause/unpause
 thyme -s    # to stop
 thyme -r    # repeats timer until manually stopped; default break of 5 minutes
 thyme -r10  # repeat timer 10 times
+thyme -f    # run in foreground, useful for debugging hooks
 ```
 
 ## Configuration
@@ -107,8 +108,6 @@ make run ARGS=-h             # to run with local arguments
 
 ## TODO
 
-* handle `status_file` configs
-* reset tmux status at end of session
 * optimize timer label, store in single update-able string
 
 ## License
