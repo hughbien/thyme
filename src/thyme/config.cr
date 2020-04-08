@@ -15,7 +15,7 @@ class Thyme::Config
   getter color_warning : String = "red"
   getter color_break : String = "default"
 
-  getter status_align : String = "right"
+  getter status_align : StatusAlign = StatusAlign::Right
   getter status_file : String | Nil
 
   getter hooks : HookCollection = HookCollection.new
@@ -24,6 +24,7 @@ class Thyme::Config
   def initialize(@toml : TOML::Table)
     as_u32 = ->(v : TOML::Type) { v.as(Int64).to_u32 }
     as_str = ->(v : TOML::Type) { v.as(String) }
+    as_align = ->(v : TOML::Type) { StatusAlign.parse(v.as(String)) }
 
     @timer = validate!("timer", as_u32) if has?("timer")
     @timer_break = validate!("timer_break", as_u32) if has?("timer_break")
@@ -34,7 +35,7 @@ class Thyme::Config
     @color_warning = validate!("color_warning", as_str) if has?("color_warning")
     @color_break = validate!("color_break", as_str) if has?("color_break")
 
-    @status_align = validate!("status_align", as_str) if has?("status_align")
+    @status_align = validate!("status_align", as_align) if has?("status_align")
     @status_file = validate!("status_file", as_str) if has?("status_file")
 
     @hooks = HookCollection.parse(toml["hooks"]) if has?("hooks")
@@ -66,7 +67,7 @@ class Thyme::Config
 
   private def validate!(key, convert)
     convert.call(toml[key])
-  rescue error : TypeCastError
+  rescue error : TypeCastError | ArgumentError
     raise Error.new("Invalid value for `#{key}` in `#{THYMERC_FILE}`: #{toml[key]}")
   end
 

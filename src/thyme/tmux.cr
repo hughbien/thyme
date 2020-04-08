@@ -3,17 +3,19 @@ require "../thyme"
 enum StatusAlign
   Left
   Right
+
+  def alignment
+    to_s.downcase
+  end
 end
 
 class Thyme::Tmux
-  getter config : Config
-  getter align : String = "right"
+  private getter config : Config
 
   def initialize(@config)
-    @align = "left" if @config.status_align == "left"
   end
 
   def set_status(status)
-    `tmux set-option -g status-#{align} "#{status}"`
+    `tmux set-option -g status-#{config.status_align.alignment} "#{status}"`
   end
 end
