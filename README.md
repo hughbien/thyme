@@ -111,10 +111,7 @@ make run ARGS=-h             # to run with local arguments
 
 ## TODO
 
-* optimize format memory allocation (optionally pass file IO straight to Format)
 * test with sleep(0.1) and long processes (handle `END_OF_STACK` error)
-* leave TODO with <https://github.com/crystal-lang/crystal/issues/3219>
-* optimize, see <https://github.com/crystal-lang/crystal-book/blob/master/guides/performance.md>
 * check memory/cpu usage
 
 ## License

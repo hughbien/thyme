@@ -21,7 +21,7 @@ module Thyme::Format
     end
   end
 
-  def with_color(text, color = "default")
+  def with_color(text, color)
     "#[fg=#{color}]#{text}#[default]"
   end
 
