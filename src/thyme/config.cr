@@ -19,6 +19,7 @@ class Thyme::Config
   getter status_file : String | Nil
 
   getter hooks : HookCollection = HookCollection.new
+  getter options : Array(Option) = Array(Option).new
 
   def initialize(@toml : TOML::Table)
     as_u32 = ->(v : TOML::Type) { v.as(Int64).to_u32 }
@@ -37,6 +38,7 @@ class Thyme::Config
     @status_file = validate!("status_file", as_str) if has?("status_file")
 
     @hooks = HookCollection.parse(toml["hooks"]) if has?("hooks")
+    parse_and_add_options if has?("options")
   end
 
   def set_repeat(count : String | Nil = nil)
@@ -66,5 +68,13 @@ class Thyme::Config
     convert.call(toml[key])
   rescue error : TypeCastError
     raise Error.new("Invalid value for `#{key}` in `#{THYMERC_FILE}`: #{toml[key]}")
+  end
+
+  private def parse_and_add_options
+    toml["options"].as(Hash(String, TOML::Type)).each do |name, option|
+      @options << Option.parse(name, option)
+    end
+  rescue TypeCastError
+    raise Error.new("Invalid value for `options` in #{Config::THYMERC_FILE}")
   end
 end

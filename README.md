@@ -110,7 +110,7 @@ make run ARGS=-h             # to run with local arguments
 * add StatusAlign enum
 * handle `status_align` and `status_file` configs
 * reset tmux status at end of session
-* add options extension
+* add `--no-daemon` option for debugging
 * optimize timer label, store in single update-able string
 
 ## License

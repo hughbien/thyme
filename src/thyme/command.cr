@@ -21,6 +21,13 @@ class Thyme::Command
       parser.on("-v", "--version", "print version") { print_version; exit }
       parser.on("-s", "--stop", "stop timer") { stop; exit }
       parser.on("-r", "--repeat [count]", "repeat timer") { |r| config.set_repeat(r) }
+      config.options.each do |option|
+        parser.on(
+          option.flag,
+          option.flag_long,
+          option.description
+      ) { |flag| option.call({ flag: flag, args: args.join(" ") }); exit }
+      end
     end
 
     if args.size > 0
@@ -30,7 +37,7 @@ class Thyme::Command
     else
       start(config)
     end
-  rescue error : OptionParser::InvalidOption | Error
+  rescue error : OptionParser::InvalidOption | OptionParser::MissingOption | Error
     io.puts(error)
   end
 

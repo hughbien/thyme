@@ -1,5 +1,10 @@
 require "../thyme"
 
+enum StatusAlign
+  Left
+  Right
+end
+
 class Thyme::Tmux
   getter config : Config
   getter align : String = "right"
