@@ -2,20 +2,19 @@ lib LibC
   fun setsid : PidT
 end
 
-module Daemon
-  def self.start!(
-    stdin = "/dev/null",
-    stdout = "/dev/null",
-    stderr = "/dev/null",
-    dir = "/"
-  )
+module Thyme::Daemon
+  DEV_NULL = "/dev/null"
+  ROOT_DIR = "/"
+
+  # Daemonizes the current process. TODO: add logging for development.
+  def self.start!
     exit if fork
     LibC.setsid
     exit if fork
-    Dir.cd(dir)
+    Dir.cd(ROOT_DIR)
 
-    STDIN.reopen(File.open(stdin, "a+"))
-    STDOUT.reopen(File.open(stdout, "a"))
-    STDERR.reopen(File.open(stderr, "a"))
+    STDIN.reopen(File.open(DEV_NULL, "a+"))
+    STDOUT.reopen(File.open(DEV_NULL, "a"))
+    STDERR.reopen(File.open(DEV_NULL, "a"))
   end
 end
