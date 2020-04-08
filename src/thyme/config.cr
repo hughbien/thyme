@@ -36,7 +36,7 @@ class Thyme::Config
     @color_break = validate!("color_break", as_str) if has?("color_break")
 
     @status_align = validate!("status_align", as_align) if has?("status_align")
-    @status_file = validate!("status_file", as_str) if has?("status_file")
+    @status_file = validate_file!("status_file", as_str) if has?("status_file")
 
     @hooks = HookCollection.parse(toml["hooks"]) if has?("hooks")
     parse_and_add_options if has?("options")
@@ -69,6 +69,13 @@ class Thyme::Config
     convert.call(toml[key])
   rescue error : TypeCastError | ArgumentError
     raise Error.new("Invalid value for `#{key}` in `#{THYMERC_FILE}`: #{toml[key]}")
+  end
+
+  private def validate_file!(key, convert)
+    path = validate!(key, convert)
+    dir = File.dirname(path)
+    raise Error.new("Invalid value for `#{key}` in `#{THYMERC_FILE}` -- `#{dir}` does not exist") unless Dir.exists?(dir)
+    path
   end
 
   private def parse_and_add_options

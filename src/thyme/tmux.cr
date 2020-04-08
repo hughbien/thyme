@@ -1,6 +1,6 @@
 require "../thyme"
 
-enum StatusAlign
+enum Thyme::StatusAlign
   Left
   Right
 
