@@ -52,8 +52,8 @@ Then set tmux to read from it:
 set -g status-right '#(cat /path/to/thyme-status)'
 ```
 
-Custom options can be added via the `[options.*]` group. The example below adds a `-t` option for
-opening a todo today file.
+Custom options can be added via the `[options.*]` group. The today example below adds a `-t` option
+for opening a todo today file. The hello example echos to STDOUT.
 
 ```toml
 [options.today]
@@ -74,7 +74,8 @@ The following placeholders are available for options:
 * `#{flag}` - the argument passed to your flag
 * `#{args}` - any additional arguments passed to the thyme binary
 
-Custom hooks can be added via the `[hooks.*]` group. Valid events are: `before`/`after` a pomodoro, `before_break`/`after_break` for breaks, and `before_all`/`after_all` for the entire session.
+Custom hooks can be added via the `[hooks.*]` group. Valid events are: `before`/`after` a pomodoro,
+`before_break`/`after_break` for breaks, and `before_all`/`after_all` for the entire session.
 
 ```toml
 [hooks.notify]
@@ -105,10 +106,6 @@ make clean                   # to remove build artifacts and target directory
 make run                     # to run locally
 make run ARGS=-h             # to run with local arguments
 ```
-
-## TODO
-
-* optimize timer label, store in single update-able string
 
 ## License
 
