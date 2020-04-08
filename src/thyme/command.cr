@@ -20,9 +20,9 @@ class Thyme::Command
 
       parser.on("-h", "--help", "print help message") { print_help(parser); exit }
       parser.on("-v", "--version", "print version") { print_version; exit }
-      parser.on("-d", "--no-daemon", "run in foreground") { @foreground = true }
-      parser.on("-s", "--stop", "stop timer") { stop; exit }
+      parser.on("-f", "--foreground", "run in foreground") { @foreground = true }
       parser.on("-r", "--repeat [count]", "repeat timer") { |r| config.set_repeat(r) }
+      parser.on("-s", "--stop", "stop timer") { stop; exit }
       config.options.each do |option|
         parser.on(
           option.flag,
