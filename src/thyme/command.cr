@@ -4,6 +4,7 @@ require "option_parser"
 class Thyme::Command
   private getter args : Array(String)
   private getter io : IO
+  private getter foreground : Bool = false
 
   def initialize(@args = ARGV, @io = STDOUT)
   end
@@ -19,6 +20,7 @@ class Thyme::Command
 
       parser.on("-h", "--help", "print help message") { print_help(parser); exit }
       parser.on("-v", "--version", "print version") { print_version; exit }
+      parser.on("-d", "--no-daemon", "run in foreground") { @foreground = true }
       parser.on("-s", "--stop", "stop timer") { stop; exit }
       parser.on("-r", "--repeat [count]", "repeat timer") { |r| config.set_repeat(r) }
       config.options.each do |option|
@@ -42,7 +44,7 @@ class Thyme::Command
   end
 
   private def start(config : Config)
-    #Daemon.start!
+    Daemon.start! unless foreground
     ProcessHandler.write_pid
 
     timer = Timer.new(config)
