@@ -1,6 +1,8 @@
 require "../thyme"
 require "toml"
 
+# Wraps the option extension in THYMERC_FILE configuration. Used by end users to extend Thyme with
+# their own options and commands.
 class Thyme::Option
   getter name : String
   getter flag : String
@@ -18,6 +20,9 @@ class Thyme::Option
   )
   end
 
+  # Calls `#command` as a system command. Replaces placeholders with actual values:
+  # `#{flag}` - value given to a flag
+  # `#{args}` - additional arguments given to the `thyme` command
   def call(option_args : NamedTuple)
     cmd = command
     option_args.each do |key, value|
@@ -27,6 +32,7 @@ class Thyme::Option
     print(output) unless output.empty?
   end
 
+  # Parses the TOML table and returns a Thyme::Option. All fields are required.
   def self.parse(name, toml)
     h = toml.as(Hash(String, TOML::Type))
     self.new(
@@ -38,6 +44,7 @@ class Thyme::Option
     )
   end
 
+  # Verifies key is available and is a String.
   def self.validate!(toml, name, key)
     toml[key].as(String)
   rescue KeyError
