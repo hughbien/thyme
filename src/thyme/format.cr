@@ -1,9 +1,13 @@
 require "../thyme"
 
+# Handles returning formatted strings presented to the end user.
 module Thyme::Format
   extend self
 
-  def status(total_seconds, suffix, on_break, config)
+  # Returns formatted timer string for Tmux's status. Note that suffix is a parameter here
+  # so we can cache the repeat_suffix outside of the seconds loop, since it only gets re-calculated
+  # after a pomodoro/break ends -- while the rest of the status is updated per second.
+  def status(total_seconds : Int64, suffix : String, on_break : Bool, config : Config)
     seconds = total_seconds % 60
     with_color(
       "#{(total_seconds / 60).to_i}:#{seconds >= 10 ? seconds : "0#{seconds}"}#{suffix}",
@@ -11,7 +15,9 @@ module Thyme::Format
     )
   end
 
-  def repeat_suffix(repeat_index, repeat_total)
+  # Returns repeat string to tell user which pomodoro they're currently on and how many
+  # there are in total. If repeat is off, return a blank string.
+  def repeat_suffix(repeat_index : UInt32, repeat_total : UInt32)
     if repeat_total == 1
       ""
     elsif repeat_total == 0 # unlimited
@@ -21,11 +27,13 @@ module Thyme::Format
     end
   end
 
-  def with_color(text, color)
+  # Wraps a string with a Tmux template for colors.
+  def with_color(text : String, color : String)
     "#[fg=#{color}]#{text}#[default]"
   end
 
-  def tmux_color(total_seconds, on_break, config)
+  # Determines which color to use for the current time: break, warning, or default.
+  def tmux_color(total_seconds : Int64, on_break : Bool, config : Config)
     if on_break
       config.color_break
     elsif total_seconds <= config.timer_warning

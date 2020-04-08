@@ -109,11 +109,6 @@ make run                     # to run locally
 make run ARGS=-h             # to run with local arguments
 ```
 
-## TODO
-
-* test with sleep(0.1) and long processes (handle `END_OF_STACK` error)
-* check memory/cpu usage
-
 ## License
 
 Copyright 2020 Hugh Bien.

@@ -14,7 +14,7 @@ class Thyme::Timer
 
   def run
     @tmux.init_status
-    repeat_index = 1
+    repeat_index : UInt32 = 1
 
     while @config.repeat == 0 || repeat_index <= @config.repeat
       break if @stop
