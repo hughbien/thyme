@@ -1,5 +1,11 @@
 require "../thyme"
 
+# Thyme runs in multiple processes (sort of):
+# 1. the main daemon process - where the timer runs continuously
+# 2. secondary processes - which start to send stop/pause/unpause to the main process
+#
+# SignalHandler is used for sending/receiving messages. Receiving should only be done
+# on the main process. Sending should only be done on the secondary process.
 module Thyme::SignalHandler
   extend self
 
