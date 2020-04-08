@@ -4,12 +4,12 @@ class Thyme::Timer
   @config : Config
   @tmux : Tmux
   @stop : Bool = false
-  @end_time : Time
-  @pause_time : Time | Nil
+  @end_time : Int64
+  @pause_time : Int64 | Nil
 
   def initialize(@config)
     @tmux = Tmux.new(@config)
-    @end_time = Time.local + (@config.timer + 1).seconds
+    @end_time = now + @config.timer
   end
 
   def run
@@ -33,11 +33,11 @@ class Thyme::Timer
 
   def toggle
     if @pause_time # unpausing, set new end_time
-      delta = Time.local - @pause_time.not_nil!
+      delta = now - @pause_time.not_nil!
       @end_time = @end_time + delta
       @pause_time = nil
     else # pausing
-      @pause_time = Time.local
+      @pause_time = now
     end
   end
 
@@ -53,8 +53,8 @@ class Thyme::Timer
     @config.hooks.before_all(hooks_args) if repeat_index == 1 && !on_break
     on_break ? @config.hooks.before_break(hooks_args) : @config.hooks.before(hooks_args)
 
-    @end_time = Time.local + (on_break ? @config.timer_break+1 : @config.timer+1).seconds
-    while Time.local < @end_time
+    @end_time = now + (on_break ? @config.timer_break : @config.timer)
+    while now < @end_time
       return if @stop
 
       @tmux.set_status(
@@ -67,7 +67,11 @@ class Thyme::Timer
     @config.hooks.after_all(hooks_args) if repeat_index == @config.repeat && !on_break
   end
 
+  private def now
+    Crystal::System::Time.monotonic.first
+  end
+
   private def time_remaining
-    @end_time - Time.local
+    @end_time - now
   end
 end

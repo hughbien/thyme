@@ -17,5 +17,8 @@ install: build
 clean:
 	rm -rf cli cli.dwarf target
 
+reset:
+	tmux source-file ~/.tmux.conf
+
 run:
 	crystal run src/cli.cr -- $(ARGS)

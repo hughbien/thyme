@@ -32,6 +32,9 @@ class Thyme::Tmux
     `tmux set-option -g #{STATUS_INTERVAL} 1`
   end
 
+  # Originally tried to set the status directly via a system call to tmux set-option,
+  # but ran into a consistent FileDescriptor and `END_OF_STACK` exceptions being raised.
+  # See <https://github.com/crystal-lang/crystal/issues/3219>
   def set_status(status)
     @file.truncate
     @file.rewind
@@ -52,7 +55,7 @@ class Thyme::Tmux
   private def fetch_tmux_val(key) : String
     result = `tmux show-options -g #{key}`.strip
     raise Error.new("Unable to fetch tmux option: #{key}") if result =~ /^invalid option/
-    result.split(2).last
+    result.split(2).fetch(1, "''")
   end
 
   private def delete_tmux_file

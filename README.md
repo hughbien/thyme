@@ -104,17 +104,14 @@ make spec ARGS=path/to/spec  # to run a single test
 make build                   # to create a release binary in the target directory
 make install                 # to copy release binary into system bin (uses $INSTALL_BIN)
 make clean                   # to remove build artifacts and target directory
+make reset                   # to reload ~/.tmux.conf file (useful while debugging)
 make run                     # to run locally
 make run ARGS=-h             # to run with local arguments
 ```
 
 ## TODO
 
-* fix FileDescriptor error: move to intermediate file only (with cached file)
-* fix tmux retrieve value (show-options takes an arg)
-* use Time.monotonic and cache it
-* optimize timer memory allocation (optionally pass file IO straight to Format)
-* add start/end tmux setting: status-interval, status-right
+* optimize format memory allocation (optionally pass file IO straight to Format)
 * test with sleep(0.1) and long processes (handle `END_OF_STACK` error)
 * leave TODO with <https://github.com/crystal-lang/crystal/issues/3219>
 * optimize, see <https://github.com/crystal-lang/crystal-book/blob/master/guides/performance.md>
