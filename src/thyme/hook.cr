@@ -26,6 +26,8 @@ class Thyme::Hook
     end
     output = `#{cmd}`
     print(output) unless output.empty?
+  rescue error : Exception
+    raise Error.new("Hook `#{name}` with command `#{cmd}` failed: #{error}")
   end
 
   def self.parse(name : String, hook : TOML::Table)

@@ -107,6 +107,18 @@ make run                     # to run locally
 make run ARGS=-h             # to run with local arguments
 ```
 
+## TODO
+
+* fix FileDescriptor error: move to intermediate file only (with cached file)
+* fix tmux retrieve value (show-options takes an arg)
+* use Time.monotonic and cache it
+* optimize timer memory allocation
+* add start/end tmux setting: status-interval, status-right
+* test with sleep(0.1) and long processes (handle `END_OF_STACK` error)
+* leave TODO with <https://github.com/crystal-lang/crystal/issues/3219>
+* optimize, see <https://github.com/crystal-lang/crystal-book/blob/master/guides/performance.md>
+* check memory/cpu usage
+
 ## License
 
 Copyright 2020 Hugh Bien.
