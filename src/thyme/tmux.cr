@@ -9,62 +9,53 @@ enum Thyme::StatusAlign
   end
 end
 
-abstract class Thyme::Tmux
-  private getter config : Config
+class Thyme::Tmux
+  STATUS_INTERVAL = "status-interval"
+  TMUX_FILE = "#{ENV["HOME"]}/.thyme-tmux"
+  TMUX_STATUS_VAL = "'#(cat #{TMUX_FILE})'"
+
+  @config : Config
+  @status_key : String
+  @original_status_val : String
+  @original_interval_val : String
 
   def initialize(@config)
+    @file = File.open(TMUX_FILE, "w")
+    @status_key = "status-#{@config.status_align.alignment}"
+    @original_status_val = fetch_tmux_val(@status_key)
+    @original_interval_val = fetch_tmux_val(STATUS_INTERVAL)
   end
 
-  abstract def set_status(status : String)
-  abstract def reset_status
-
-  def self.for(config : Config)
-    if config.status_file
-      TmuxFile.new(config)
-    else
-      TmuxMessage.new(config)
-    end
-  end
-end
-
-class Thyme::TmuxMessage < Thyme::Tmux
-  @key : String
-  @original : String
-
-  def initialize(@config)
-    super
-    @key = "status-#{config.status_align.alignment}"
-    @original = fetch_status
+  def init_status
+    return unless @config.status_override
+    `tmux set-option -g #{@status_key} #{TMUX_STATUS_VAL}`
+    `tmux set-option -g #{STATUS_INTERVAL} 1`
   end
 
   def set_status(status)
-    `tmux set-option -g #{@key} "#{status}"`
+    @file.truncate
+    @file.rewind
+    @file.print(status)
+    @file.flush
   end
 
   def reset_status
-    set_status(@original)
-  end
-
-  private def fetch_status
-    parts = `tmux show-options -g | grep #{@key}`.split("\n").map do |line|
-      line.split(" ", 2)
-    end.find do |parts|
-      parts.first == @key
+    if @config.status_override
+      # Don't wrap value with quotes, Tmux does this automatically when fetching
+      `tmux set-option -g #{@status_key} #{@original_status_val}`
+      `tmux set-option -g #{STATUS_INTERVAL} #{@original_interval_val}`
     end
-    parts.nil? ? "" : parts.last
-  end
-end
-
-class Thyme::TmuxFile < Thyme::Tmux
-  def set_status(status)
-    File.write(status_file, status)
+  ensure
+    delete_tmux_file
   end
 
-  def reset_status
-    File.delete(status_file)
+  private def fetch_tmux_val(key) : String
+    result = `tmux show-options -g #{key}`.strip
+    raise Error.new("Unable to fetch tmux option: #{key}") if result =~ /^invalid option/
+    result.split(2).last
   end
 
-  private def status_file
-    config.status_file.not_nil!
+  private def delete_tmux_file
+    @file.delete
   end
 end

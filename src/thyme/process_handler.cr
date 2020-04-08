@@ -1,7 +1,7 @@
 require "../thyme"
 
 module Thyme::ProcessHandler
-  PID_FILE = "#{ENV["HOME"]}/.thymepid"
+  PID_FILE = "#{ENV["HOME"]}/.thyme-pid"
 
   extend self
 

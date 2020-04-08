@@ -16,7 +16,7 @@ class Thyme::Config
   getter color_break : String = "default"
 
   getter status_align : StatusAlign = StatusAlign::Right
-  getter status_file : String | Nil
+  getter status_override : Bool = true
 
   getter hooks : HookCollection = HookCollection.new
   getter options : Array(Option) = Array(Option).new
@@ -24,6 +24,7 @@ class Thyme::Config
   def initialize(@toml : TOML::Table)
     as_u32 = ->(v : TOML::Type) { v.as(Int64).to_u32 }
     as_str = ->(v : TOML::Type) { v.as(String) }
+    as_bool = ->(v : TOML::Type) { v.as(Bool) }
     as_align = ->(v : TOML::Type) { StatusAlign.parse(v.as(String)) }
 
     @timer = validate!("timer", as_u32) if has?("timer")
@@ -36,7 +37,7 @@ class Thyme::Config
     @color_break = validate!("color_break", as_str) if has?("color_break")
 
     @status_align = validate!("status_align", as_align) if has?("status_align")
-    @status_file = validate_file!("status_file", as_str) if has?("status_file")
+    @status_override = validate!("status_override", as_bool) if has?("status_override")
 
     @hooks = HookCollection.parse(toml["hooks"]) if has?("hooks")
     parse_and_add_options if has?("options")
@@ -69,13 +70,6 @@ class Thyme::Config
     convert.call(toml[key])
   rescue error : TypeCastError | ArgumentError
     raise Error.new("Invalid value for `#{key}` in `#{THYMERC_FILE}`: #{toml[key]}")
-  end
-
-  private def validate_file!(key, convert)
-    path = validate!(key, convert)
-    dir = File.dirname(path)
-    raise Error.new("Invalid value for `#{key}` in `#{THYMERC_FILE}` -- `#{dir}` does not exist") unless Dir.exists?(dir)
-    path
   end
 
   private def parse_and_add_options

@@ -39,17 +39,18 @@ color_break = "default"    # set break color for tmux
 status_align = "left"      # use tmux's left status line instead, defaults to "right"
 ```
 
-If you prefer to set the status yourself (or need to combine it with other statuses), you can have
-thyme write the timer to a file instead:
+Thyme sets tmux's status-right/left and interval for you. If you'd prefer to do this yourself (or
+need to combine it with other statuses), set `status_override`:
 
 ```toml
-status_file = "/path/to/thyme-status"
+status_override = false    # don't let thyme set tmux's status-right/left/interval
 ```
 
-Then set tmux to read from it:
+Then in your `~/.tmux.conf` file, set the status command and interval:
 
 ```
 set -g status-right '#(cat /path/to/thyme-status)'
+set -g status-interval 1
 ```
 
 Custom options can be added via the `[options.*]` group. The today example below adds a `-t` option
@@ -112,7 +113,7 @@ make run ARGS=-h             # to run with local arguments
 * fix FileDescriptor error: move to intermediate file only (with cached file)
 * fix tmux retrieve value (show-options takes an arg)
 * use Time.monotonic and cache it
-* optimize timer memory allocation
+* optimize timer memory allocation (optionally pass file IO straight to Format)
 * add start/end tmux setting: status-interval, status-right
 * test with sleep(0.1) and long processes (handle `END_OF_STACK` error)
 * leave TODO with <https://github.com/crystal-lang/crystal/issues/3219>
