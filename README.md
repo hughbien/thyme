@@ -2,9 +2,17 @@
 
 Thyme is a pomodoro timer for tmux.
 
+![Thyme Example](asset/thyme.gif)
+
 ## Installation
 
-Download the thyme binary and place it in your `$PATH`.
+Download the binary here:
+
+* [thyme v0.1.0](https://github.com/hughbien/thyme/releases/tag/v0.1.0)
+
+and place it in your `$PATH`. Or checkout this repo and run `make build`, the binary should be
+located at `target/thyme`.
+
 
 ## Usage
 
