@@ -17,6 +17,10 @@ class Thyme::HookCollection
     end
   end
 
+  def size
+    @hooks.values.sum { |arr| arr.size }
+  end
+
   def before(hooks_args)
     call(HookEvent::Before, hooks_args)
   end

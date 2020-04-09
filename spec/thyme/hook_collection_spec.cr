@@ -19,6 +19,12 @@ describe Thyme::HookCollection do
     file.delete
   end
 
+  describe "#size" do
+    it "delegates to hooks" do
+      hooks.size.should eq(6)
+    end
+  end
+
   describe "#before" do
     it "runs before hooks" do
       hooks.before(hooks_args)

@@ -23,6 +23,7 @@ class Thyme::Config
   getter hooks : HookCollection = HookCollection.new
   getter options : Array(Option) = Array(Option).new
 
+  # THYMERC_FILE is validated on initialization
   def initialize(@toml : TOML::Table)
     as_u32 = ->(v : TOML::Type) { v.as(Int64).to_u32 }
     as_str = ->(v : TOML::Type) { v.as(String) }
@@ -45,6 +46,8 @@ class Thyme::Config
     parse_and_add_options if has?("options")
   end
 
+  # Called when the --repeat flag is used. If no argument is given, falls back to
+  # default used in THYMERC_FILE. If no default is there, set to 0 for unlimited repeats.
   def set_repeat(count : String | Nil = nil)
     if count
       @repeat = count.to_u32
@@ -57,6 +60,7 @@ class Thyme::Config
     raise Error.new("Invalid value for `repeat`: #{count}")
   end
 
+  # Returns a Config from a TOML file
   def self.parse(file = THYMERC_FILE)
     toml = TOML.parse(File.exists?(file) ? File.read(file) : "")
     Thyme::Config.new(toml)
@@ -70,7 +74,7 @@ class Thyme::Config
 
   private def validate!(key, convert)
     convert.call(toml[key])
-  rescue error : TypeCastError | ArgumentError
+  rescue error : TypeCastError | ArgumentError | OverflowError
     raise Error.new("Invalid value for `#{key}` in `#{THYMERC_FILE}`: #{toml[key]}")
   end
 
