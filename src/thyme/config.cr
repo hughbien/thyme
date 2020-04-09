@@ -1,6 +1,8 @@
 require "../thyme"
 require "toml"
 
+# Reads THYMERC_FILE, parses it, and stores its configuration. There should be one instance of
+# Config which gets passed to all other classes. All values are optional.
 class Thyme::Config
   THYMERC_FILE = "#{ENV["HOME"]}/.thymerc"
 

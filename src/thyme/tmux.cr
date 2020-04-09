@@ -9,6 +9,8 @@ enum Thyme::StatusAlign
   end
 end
 
+# Handles communication with Tmux. Before/after all pomodoros, the status will be init/reset. Every
+# second, the timer will call #set_status with the new label (eg "4:25 (3/4)").
 class Thyme::Tmux
   STATUS_INTERVAL = "status-interval"
   TMUX_FILE = "#{ENV["HOME"]}/.thyme-tmux"
