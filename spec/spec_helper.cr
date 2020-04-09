@@ -20,3 +20,15 @@ def build_config(values = Hash(String, String | UInt32 | Bool).new)
 ensure
   file.delete if file
 end
+
+def build_hook(event = "before", command = "")
+  Thyme::Hook.new(event, [Thyme::HookEvent.parse(event)], command)
+end
+
+def hooks_args
+  {
+    repeat_index: "1",
+    repeat_total: "2",
+    repeat_suffix: "(1/2)"
+  }
+end

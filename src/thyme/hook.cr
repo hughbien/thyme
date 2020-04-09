@@ -38,7 +38,7 @@ class Thyme::Hook
     )
   end
 
-  def self.parse_events(name, hook : TOML::Table)
+  private def self.parse_events(name, hook : TOML::Table)
     if event = hook["events"].as?(String)
       [HookEvent.parse(event)]
     else
@@ -50,7 +50,7 @@ class Thyme::Hook
     raise Error.new("Hook `#{name}` has invalid `events` in `#{Config::THYMERC_FILE}`: #{hook["events"]}")
   end
 
-  def self.parse_command(name, hook : TOML::Table)
+  private def self.parse_command(name, hook : TOML::Table)
     hook["command"].as(String)
   rescue KeyError
     raise Error.new("Hook `#{name}` is missing `command` in `#{Config::THYMERC_FILE}`")

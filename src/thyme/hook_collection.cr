@@ -1,16 +1,15 @@
 require "../thyme"
 require "toml"
 
+# Neatly holds multiple Thyme::Hook, categorizing them by their events. The same hook may belong
+# to multiple categories.
 class Thyme::HookCollection
   @hooks : Hash(HookEvent, Array(Hook)) = Hash.zip(
     HookEvent.values,
     HookEvent.values.map { Array(Thyme::Hook).new }
   )
 
-  def initialize
-  end
-
-  def initialize(hooks : Array(Hook))
+  def initialize(hooks = Array(Hook).new)
     hooks.each do |hook|
       hook.events.each do |event|
         @hooks[event] << hook
@@ -46,6 +45,7 @@ class Thyme::HookCollection
     @hooks[event].each(&.call(hooks_args))
   end
 
+  # Given TOML from the THYMERC_FILE, returns a HookCollection with hooks parsed and neatly sorted
   def self.parse(hooks : TOML::Type)
     self.new(
       hooks.as(TOML::Table).map do |key, value|
