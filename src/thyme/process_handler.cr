@@ -17,7 +17,7 @@ module Thyme::ProcessHandler
   # processes (eg during stopping/pausing/unpausing).
   def read_pid
     File.read(PID_FILE).strip.to_i
-  rescue Errno
+  rescue IO::Error
     raise Error.new("Cannot read #{PID_FILE}, try re-starting thyme")
   end
 
@@ -30,7 +30,7 @@ module Thyme::ProcessHandler
   # Clean up by removing PID_FILE.
   def delete_pid
     File.delete(PID_FILE)
-  rescue Errno
+  rescue IO::Error
     # ignore, file already deleted
   end
 

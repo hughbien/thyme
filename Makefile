@@ -4,18 +4,16 @@ spec: test
 test:
 	crystal spec $(ARGS)
 
-build: target/thyme
-target/thyme:
-	crystal build src/cli.cr --release
-	mkdir -p target
-	mv cli target/thyme
-	rm cli.dwarf
+build: bin/thyme
+bin/thyme:
+	shards build --production
+	rm bin/thyme.dwarf
 
 install: build
-	cp target/thyme $(INSTALL_BIN)
+	cp bin/thyme $(INSTALL_BIN)
 
 clean:
-	rm -rf cli cli.dwarf target
+	rm -rf bin
 
 reset:
 	tmux source-file ~/.tmux.conf

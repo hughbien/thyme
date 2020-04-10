@@ -11,7 +11,7 @@ Download the binary here:
 * [thyme v0.1.0](https://github.com/hughbien/thyme/releases/tag/v0.1.0)
 
 and place it in your `$PATH`. Or checkout this repo and run `make build`, the binary should be
-located at `target/thyme`.
+located at `bin/thyme`.
 
 
 ## Usage
@@ -109,13 +109,17 @@ Use `make` for common tasks:
 ```
 make spec                    # to run all tests
 make spec ARGS=path/to/spec  # to run a single test
-make build                   # to create a release binary in the target directory
+make build                   # to create a release binary in the bin directory
 make install                 # to copy release binary into system bin (uses $INSTALL_BIN)
-make clean                   # to remove build artifacts and target directory
+make clean                   # to remove build artifacts and bin directory
 make reset                   # to reload ~/.tmux.conf file (useful while debugging)
 make run                     # to run locally
 make run ARGS=-h             # to run with local arguments
 ```
+
+## TODO
+
+* change --foreground to --no-daemon?
 
 ## License
 

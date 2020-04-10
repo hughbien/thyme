@@ -6,13 +6,13 @@ authors:
 
 targets:
   thyme:
-    main: src/thyme.cr
+    main: src/cli.cr
 
 dependencies:
   toml:
     github: crystal-community/toml.cr
     branch: master
 
-crystal: 0.33.0
+crystal: 0.34.0
 
 license: BSD
