@@ -111,6 +111,7 @@ make spec                    # to run all tests
 make spec ARGS=path/to/spec  # to run a single test
 make build                   # to create a release binary in the bin directory
 make install                 # to copy release binary into system bin (uses $INSTALL_BIN)
+make release                 # to build releases for darwin/linux (requires docker)
 make clean                   # to remove build artifacts and bin directory
 make reset                   # to reload ~/.tmux.conf file (useful while debugging)
 make run                     # to run locally
