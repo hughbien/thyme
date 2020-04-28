@@ -120,7 +120,7 @@ make run ARGS=-h             # to run with local arguments
 
 ## TODO
 
-* change --foreground to --no-daemon?
+* handle laptop closed for long pause
 
 ## License
 
