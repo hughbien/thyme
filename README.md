@@ -13,7 +13,6 @@ Download the binary here:
 and place it in your `$PATH`. Or checkout this repo and run `make build`, the binary should be
 located at `bin/thyme`.
 
-
 ## Usage
 
 Start thyme with:
@@ -36,22 +35,22 @@ thyme -f    # run in foreground, useful for debugging hooks
 
 Configure via the `~/.thymerc` file:
 
-```toml
-timer = 1500               # 25 minutes per pomodoro (in seconds)
-timer_break = 300          # 5 minutes per break (in seconds)
-timer_warning = 300        # show warning color at 5 minutes left (in seconds)
-repeat = 4                 # set default for -r flag, otherwise repeat indefinitely
-color_default = "default"  # set default timer color for tmux
-color_warning = "red"      # set warning color for tmux, set to "default" to disable
-color_break = "default"    # set break color for tmux
-status_align = "left"      # use tmux's left status line instead, defaults to "right"
+```yaml
+timer: 1500               # 25 minutes per pomodoro (in seconds)
+timer_break: 300          # 5 minutes per break (in seconds)
+timer_warning: 300        # show warning color at 5 minutes left (in seconds)
+repeat: 4                 # set default for -r flag, otherwise repeat indefinitely
+color_default: "default"  # set default timer color for tmux
+color_warning: "red"      # set warning color for tmux, set to "default" to disable
+color_break: "default"    # set break color for tmux
+status_align: "left"      # use tmux's left status line instead, defaults to "right"
 ```
 
 Thyme sets tmux's status-right/left and interval for you. If you'd prefer to do this yourself (or
 need to combine it with other statuses), set `status_override`:
 
-```toml
-status_override = false    # don't let thyme set tmux's status-right/left/interval
+```yaml
+status_override: false    # don't let thyme set tmux's status-right/left/interval
 ```
 
 Then in your `~/.tmux.conf` file, set the status command and interval:
@@ -61,21 +60,22 @@ set -g status-right '#(cat /path/to/thyme-status)'
 set -g status-interval 1
 ```
 
-Custom options can be added via the `[options.*]` group. The today example below adds a `-t` option
+Custom options can be added via the `options` group. The today example below adds a `-t` option
 for opening a todo today file. The hello example echos to STDOUT.
 
-```toml
-[options.today]
-flag = "-t"
-flag_long = "--today"
-description = "Open TODO today file"
-command = "vim ~/path/to/todo.md"
+```yaml
+options:
+  today:
+    flag: "-t"
+    flag_long: "--today"
+    description: "Open TODO today file"
+    command: "vim ~/path/to/todo.md"
 
-[options.hello]
-flag = "-H"
-flag_long = "--hello name"
-description = "Say hello!"
-command = "echo \"Hello #{flag}! #{args}.\"" # eg `thyme -H John "How are you?"`
+  hello:
+    flag: "-H"
+    flag_long: "--hello name"
+    description: "Say hello!"
+    command: "echo \"Hello #{flag}! #{args}.\"" # eg `thyme -H John "How are you?"`
 ```
 
 The following placeholders are available for options:
@@ -83,17 +83,18 @@ The following placeholders are available for options:
 * `#{flag}` - the argument passed to your flag
 * `#{args}` - any additional arguments passed to the thyme binary
 
-Custom hooks can be added via the `[hooks.*]` group. Valid events are: `before`/`after` a pomodoro,
+Custom hooks can be added via the `hooks` group. Valid events are: `before`/`after` a pomodoro,
 `before_break`/`after_break` for breaks, and `before_all`/`after_all` for the entire session.
 
-```toml
-[hooks.notify]
-events = ["after"]
-command = "terminal-notifier -message \"Pomodoro finished #{repeat_suffix}\" -title \"thyme\""
+```yaml
+hooks:
+  notify:
+    events: ["after"]
+    command: "terminal-notifier -message \"Pomodoro finished #{repeat_suffix}\" -title \"thyme\""
 
-[hooks.notify_break]
-events = ["after_break"]
-command = "terminal-notifier -message \"Break finished #{repeat_suffix}\" -title \"thyme\""
+  notify_break:
+    events: ["after_break"]
+    command: "terminal-notifier -message \"Break finished #{repeat_suffix}\" -title \"thyme\""
 ```
 
 The following placeholders are available for hooks:
@@ -124,6 +125,6 @@ make run ARGS=-h             # to run with local arguments
 
 ## License
 
-Copyright 2020 Hugh Bien.
+Copyright 2020-2021 Hugh Bien.
 
 Released under BSD License, see LICENSE for details.

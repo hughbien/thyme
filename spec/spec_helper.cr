@@ -13,7 +13,7 @@ def build_config(values = Hash(String, String | UInt32 | Bool).new)
   file = File.tempfile
   values.each do |key, value|
     value = "\"#{value}\"" if value.as?(String)
-    file << "#{key} = #{value}\n"
+    file << "#{key}: #{value}\n"
   end
   file.close
   Thyme::Config.parse(file.path)

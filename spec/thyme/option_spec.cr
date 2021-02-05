@@ -1,5 +1,5 @@
 require "../spec_helper"
-require "toml"
+require "yaml"
 
 describe Thyme::Option do
   describe "#initialize" do
@@ -34,26 +34,26 @@ describe Thyme::Option do
   describe ".parse" do
     it "raises error when field is not a string" do
       expect_raises(Thyme::Error, /invalid/) do
-        Thyme::Option.parse("example", TOML.parse("flag = 1"))
+        Thyme::Option.parse("example", YAML.parse("flag: 1"))
       end
     end
 
     it "raises error when field is missing" do
       expect_raises(Thyme::Error, /missing/) do
-        Thyme::Option.parse("example", TOML.parse(""))
+        Thyme::Option.parse("example", YAML.parse(""))
       end
     end
 
-    it "returns Thyme::Option from TOML" do
-      toml = TOML.parse(
+    it "returns Thyme::Option from YAML" do
+      yaml = YAML.parse(
         <<-CONFIG
-        flag = "-f"
-        flag_long = "--flag"
-        description = "Lorem Ipsum"
-        command = "echo hello"
+        flag: "-f"
+        flag_long: "--flag"
+        description: "Lorem Ipsum"
+        command: "echo hello"
         CONFIG
       )
-      option = Thyme::Option.parse("example", toml)
+      option = Thyme::Option.parse("example", yaml)
       option.name.should eq("example")
       option.flag.should eq("-f")
       option.flag_long.should eq("--flag")
@@ -62,22 +62,22 @@ describe Thyme::Option do
   end
 
   describe ".validate!" do
-    toml = TOML.parse("int_value = 1\nstr_value = \"test\"")
+    yaml = YAML.parse("int_value: 1\nstr_value: \"test\"")
 
     it "raises error when field is not a string" do
       expect_raises(Thyme::Error, /invalid/) do
-        Thyme::Option.validate!(toml, "", "int_value")
+        Thyme::Option.validate!(yaml, "", "int_value")
       end
     end
 
     it "raises error when field is missing" do
       expect_raises(Thyme::Error, /missing/) do
-        Thyme::Option.validate!(toml, "", "missing_value")
+        Thyme::Option.validate!(yaml, "", "missing_value")
       end
     end
 
     it "returns value for key" do
-      Thyme::Option.validate!(toml, "", "str_value").should eq("test")
+      Thyme::Option.validate!(yaml, "", "str_value").should eq("test")
     end
   end
 end

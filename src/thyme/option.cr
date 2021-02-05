@@ -1,5 +1,5 @@
 require "../thyme"
-require "toml"
+require "yaml"
 
 # Wraps the option extension in THYMERC_FILE configuration. Used by end users to extend Thyme with
 # their own options and commands.
@@ -32,9 +32,9 @@ class Thyme::Option
     print(output) unless output.empty?
   end
 
-  # Parses the TOML table and returns a Thyme::Option. All fields are required.
-  def self.parse(name, toml)
-    h = toml.as(Hash(String, TOML::Type))
+  # Parses YAML and returns a Thyme::Option. All fields are required.
+  def self.parse(name, yaml)
+    h = yaml.as_h? ? yaml.as_h : Hash(String, YAML::Any).new
     self.new(
       name,
       validate!(h, name, "flag"),
@@ -45,8 +45,8 @@ class Thyme::Option
   end
 
   # Verifies key is available and is a String.
-  def self.validate!(toml, name, key)
-    toml[key].as(String)
+  def self.validate!(yaml, name, key)
+    yaml[key].as_s
   rescue KeyError
     raise Error.new("Option `#{name}` is missing `#{key}` in `#{Config::THYMERC_FILE}`")
   rescue TypeCastError

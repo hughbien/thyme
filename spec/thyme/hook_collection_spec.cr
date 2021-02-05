@@ -1,5 +1,5 @@
 require "../spec_helper"
-require "toml"
+require "yaml"
 
 describe Thyme::HookCollection do
   file = File.tempfile
@@ -69,15 +69,15 @@ describe Thyme::HookCollection do
 
   describe ".parse" do
     it "raises error when hooks is invalid" do
-      toml = TOML.parse("hooks = 1\n")
+      yaml = YAML.parse("hooks: 1\n")
       expect_raises(Thyme::Error, /Invalid value for `hooks`/) do
-        Thyme::HookCollection.parse(toml["hooks"])
+        Thyme::HookCollection.parse(yaml["hooks"])
       end
     end
 
     it "returns collection on success" do
-      toml = TOML.parse("[hooks.notify]\nevents = \"before\"\ncommand = \"echo\"")
-      collection = Thyme::HookCollection.parse(toml["hooks"])
+      yaml = YAML.parse("hooks:\n  notify:\n    events: \"before\"\n    command: \"echo\"")
+      collection = Thyme::HookCollection.parse(yaml["hooks"])
       collection.is_a?(Thyme::HookCollection).should be_true
     end
   end

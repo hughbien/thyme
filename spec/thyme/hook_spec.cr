@@ -1,5 +1,5 @@
 require "../spec_helper"
-require "toml"
+require "yaml"
 require "uuid"
 
 describe Thyme::Hook do
@@ -28,43 +28,43 @@ describe Thyme::Hook do
 
   describe ".parse" do
     it "raises error on missing events" do
-      toml = TOML.parse("command = \"\"")
+      yaml = YAML.parse("command: \"\"")
       expect_raises(Thyme::Error, /missing `events`/) do
-        Thyme::Hook.parse("name", toml)
+        Thyme::Hook.parse("name", yaml)
       end
     end
 
     it "raises error on invalid event" do
-      toml = TOML.parse("events = 1\ncommand = \"\"")
+      yaml = YAML.parse("events: 1\ncommand: \"\"")
       expect_raises(Thyme::Error, /invalid `events`/) do
-        Thyme::Hook.parse("name", toml)
+        Thyme::Hook.parse("name", yaml)
       end
     end
 
     it "raises error on unknown event" do
-      toml = TOML.parse("events = \"not-an-event\"\ncommand = \"\"")
+      yaml = YAML.parse("events: \"not-an-event\"\ncommand: \"\"")
       expect_raises(Thyme::Error, /invalid `events`/) do
-        Thyme::Hook.parse("name", toml)
+        Thyme::Hook.parse("name", yaml)
       end
     end
 
     it "raises error on missing command" do
-      toml = TOML.parse("events = \"before\"")
+      yaml = YAML.parse("events: \"before\"")
       expect_raises(Thyme::Error, /missing `command`/) do
-        Thyme::Hook.parse("name", toml)
+        Thyme::Hook.parse("name", yaml)
       end
     end
 
     it "raises error on invalid command" do
-      toml = TOML.parse("events = \"before\"\ncommand = 1")
+      yaml = YAML.parse("events: \"before\"\ncommand: 1")
       expect_raises(Thyme::Error, /invalid `command`/) do
-        Thyme::Hook.parse("name", toml)
+        Thyme::Hook.parse("name", yaml)
       end
     end
 
     it "returns a Hook" do
-      toml = TOML.parse("events = \"before\"\ncommand = \"\"")
-      hook = Thyme::Hook.parse("name", toml)
+      yaml = YAML.parse("events: \"before\"\ncommand: \"\"")
+      hook = Thyme::Hook.parse("name", yaml)
       hook.name.should eq("name")
       hook.events.should eq([Thyme::HookEvent::Before])
     end

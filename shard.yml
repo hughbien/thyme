@@ -8,11 +8,6 @@ targets:
   thyme:
     main: src/cli.cr
 
-dependencies:
-  toml:
-    github: crystal-community/toml.cr
-    branch: master
-
 crystal: 0.34.0
 
 license: BSD

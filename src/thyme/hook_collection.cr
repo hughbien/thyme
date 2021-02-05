@@ -1,5 +1,5 @@
 require "../thyme"
-require "toml"
+require "yaml"
 
 # Neatly holds multiple Thyme::Hook, categorizing them by their events. The same hook may belong
 # to multiple categories.
@@ -49,11 +49,11 @@ class Thyme::HookCollection
     @hooks[event].each(&.call(hooks_args))
   end
 
-  # Given TOML from the THYMERC_FILE, returns a HookCollection with hooks parsed and neatly sorted
-  def self.parse(hooks : TOML::Type)
+  # Given YAML from the THYMERC_FILE, returns a HookCollection with hooks parsed and neatly sorted
+  def self.parse(hooks : YAML::Any)
     self.new(
-      hooks.as(TOML::Table).map do |key, value|
-        Hook.parse(key.as(String), value.as(TOML::Table))
+      hooks.as_h.map do |key, value|
+        Hook.parse(key.as_s, value.as(YAML::Any))
       end
     )
   rescue TypeCastError

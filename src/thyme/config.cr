@@ -1,12 +1,12 @@
 require "../thyme"
-require "toml"
+require "yaml"
 
 # Reads THYMERC_FILE, parses it, and stores its configuration. There should be one instance of
 # Config which gets passed to all other classes. All values are optional.
 class Thyme::Config
   THYMERC_FILE = "#{ENV["HOME"]}/.thymerc"
 
-  private getter toml : TOML::Table
+  private getter yaml : YAML::Any
 
   getter timer : UInt32 = (25 * 60).to_u32
   getter timer_break : UInt32 = (5 * 60).to_u32
@@ -24,11 +24,13 @@ class Thyme::Config
   getter options : Array(Option) = Array(Option).new
 
   # THYMERC_FILE is validated on initialization
-  def initialize(@toml : TOML::Table)
-    as_u32 = ->(v : TOML::Type) { v.as(Int64).to_u32 }
-    as_str = ->(v : TOML::Type) { v.as(String) }
-    as_bool = ->(v : TOML::Type) { v.as(Bool) }
-    as_align = ->(v : TOML::Type) { StatusAlign.parse(v.as(String)) }
+  def initialize(input : YAML::Any)
+    @yaml = as_nil?(input) ? YAML::Any.new(Hash(YAML::Any, YAML::Any).new) : input
+
+    as_u32 = ->(v : YAML::Any) { v.as_i64.to_u32 }
+    as_str = ->(v : YAML::Any) { v.as_s }
+    as_bool = ->(v : YAML::Any) { v.as_bool }
+    as_align = ->(v : YAML::Any) { StatusAlign.parse(v.as_s) }
 
     @timer = validate!("timer", as_u32) if has?("timer")
     @timer_break = validate!("timer_break", as_u32) if has?("timer_break")
@@ -42,7 +44,7 @@ class Thyme::Config
     @status_align = validate!("status_align", as_align) if has?("status_align")
     @status_override = validate!("status_override", as_bool) if has?("status_override")
 
-    @hooks = HookCollection.parse(toml["hooks"]) if has?("hooks")
+    @hooks = HookCollection.parse(yaml["hooks"]) if has?("hooks")
     parse_and_add_options if has?("options")
   end
 
@@ -52,7 +54,7 @@ class Thyme::Config
     if count
       @repeat = count.to_u32
     elsif has?("repeat")
-      @repeat = toml["repeat"].as(Int64).to_u32
+      @repeat = yaml["repeat"].as_i64.to_u32
     else
       @repeat = 0
     end
@@ -60,29 +62,42 @@ class Thyme::Config
     raise Error.new("Invalid value for `repeat`: #{count}")
   end
 
-  # Returns a Config from a TOML file
+  # Returns a Config from a YAML file
   def self.parse(file = THYMERC_FILE)
-    toml = TOML.parse(File.exists?(file) ? File.read(file) : "")
-    Thyme::Config.new(toml)
-  rescue error : TOML::ParseException
+    contents = File.exists?(file) ? File.read(file) : ""
+    yaml = if contents.strip == "" # empty configs will have empty key/values
+      YAML::Any.new(Hash(YAML::Any, YAML::Any).new)
+    else
+      YAML.parse(contents)
+    end
+    raise ArgumentError.new("Config must be a key value map") unless yaml.as_h?
+    Thyme::Config.new(yaml)
+  rescue error : YAML::ParseException | ArgumentError
     raise Error.new("Unable to parse `#{THYMERC_FILE}` -- #{error.to_s}")
   end
 
   private def has?(key)
-    toml.has_key?(key)
+    !yaml[key]?.nil?
   end
 
   private def validate!(key, convert)
-    convert.call(toml[key])
+    convert.call(yaml[key])
   rescue error : TypeCastError | ArgumentError | OverflowError
-    raise Error.new("Invalid value for `#{key}` in `#{THYMERC_FILE}`: #{toml[key]}")
+    raise Error.new("Invalid value for `#{key}` in `#{THYMERC_FILE}`: #{yaml[key]}")
   end
 
   private def parse_and_add_options
-    toml["options"].as(Hash(String, TOML::Type)).each do |name, option|
-      @options << Option.parse(name, option)
+    yaml["options"].as_h.each do |name, option|
+      @options << Option.parse(name.as_s, option)
     end
   rescue TypeCastError
     raise Error.new("Invalid value for `options` in #{Config::THYMERC_FILE}")
+  end
+
+  private def as_nil?(any : YAML::Any) : Bool
+    any.as_nil
+    true
+  rescue TypeCastError
+    false
   end
 end
