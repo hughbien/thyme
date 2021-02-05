@@ -8,7 +8,7 @@ Thyme is a pomodoro timer for tmux.
 
 Download the binary here:
 
-* [thyme v0.1.0](https://github.com/hughbien/thyme/releases/tag/v0.1.0)
+* [thyme v0.1.1](https://github.com/hughbien/thyme/releases/tag/v0.1.1)
 
 and place it in your `$PATH`. Or checkout this repo and run `make build`, the binary should be
 located at `bin/thyme`.
