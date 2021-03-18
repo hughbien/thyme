@@ -16,7 +16,7 @@ This will install Crystal v0.36.1 as a dependency. If you already have this vers
 feel free to run:
 
 ```
-brew install hughbien/tap/thyme --without-crystal
+brew install hughbien/tap/thyme --ignore-dependencies crystal
 ```
 
 **Linux**
