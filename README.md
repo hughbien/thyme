@@ -21,8 +21,16 @@ brew install hughbien/tap/thyme --ignore-dependencies crystal
 
 **Linux**
 
-Download the binary here: [thyme v0.1.3](https://github.com/hughbien/thyme/releases/tag/v0.1.3).
-Place it in your `$PATH`.
+Download the latest binary and place it in your `$PATH`:
+
+```
+wget -O thyme https://github.com/hughbien/thyme/releases/download/v0.1.3/thyme-linux64-0.1.3
+```
+
+Checksums are:
+
+* sha256: `886e9a7ed4af214ca350fea7bd0685668c190ffbe4028cecc6fef6cffe681769`
+* md5: `d62beffe9666a9df77a8e3fc2343c8d8`
 
 **From Source**
 
