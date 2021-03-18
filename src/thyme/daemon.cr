@@ -8,9 +8,9 @@ module Thyme::Daemon
 
   # Daemonizes the current process. TODO: add logging for development.
   def self.start!
-    exit if fork
+    exit if Process.fork
     LibC.setsid
-    exit if fork
+    exit if Process.fork
     Dir.cd(ROOT_DIR)
 
     STDIN.reopen(File.open(DEV_NULL, "a+"))
