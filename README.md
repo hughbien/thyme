@@ -12,8 +12,8 @@ Thyme is a pomodoro timer for tmux.
 brew install hughbien/tap/thyme
 ```
 
-This will install Crystal v0.36.1 as a dependency. If you already have this version of Crystal,
-feel free to run:
+This will install Crystal as a dependency. If you already have this version of Crystal, feel free to
+run:
 
 ```
 brew install hughbien/tap/thyme --ignore-dependencies crystal
@@ -24,13 +24,10 @@ brew install hughbien/tap/thyme --ignore-dependencies crystal
 Download the latest binary and place it in your `$PATH`:
 
 ```
-wget -O thyme https://github.com/hughbien/thyme/releases/download/v0.1.3/thyme-linux64-0.1.3
+wget -O thyme https://github.com/hughbien/thyme/releases/download/v0.1.4/thyme-linux-amd64
 ```
 
-Checksums are:
-
-* sha256: `886e9a7ed4af214ca350fea7bd0685668c190ffbe4028cecc6fef6cffe681769`
-* md5: `d62beffe9666a9df77a8e3fc2343c8d8`
+MD5 checksum is: `221d80b1fb7ec32ac58ca193852d9afb`
 
 **From Source**
 
