@@ -51,7 +51,7 @@ class Thyme::Config
   # Called when the --repeat flag is used. If no argument is given, falls back to
   # default used in THYMERC_FILE. If no default is there, set to 0 for unlimited repeats.
   def set_repeat(count : String | Nil = nil)
-    if count
+    if count && !count.to_s.strip.empty?
       @repeat = count.to_u32
     elsif has?("repeat")
       @repeat = yaml["repeat"].as_i64.to_u32

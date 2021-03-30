@@ -1,5 +1,5 @@
 INSTALL_BIN ?= /usr/local/bin
-VERSION = $(shell cat shard.yml | grep version | sed -e "s/version: //")
+VERSION = $(shell cat shard.yml | grep ^version | sed -e "s/version: //")
 
 build: bin/thyme
 bin/thyme:
