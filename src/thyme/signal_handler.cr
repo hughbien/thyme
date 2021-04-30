@@ -14,7 +14,7 @@ module Thyme::SignalHandler
   end
 
   def send_stop
-    Process.kill(Signal::INT, ProcessHandler.read_pid)
+    Process.signal(Signal::INT, ProcessHandler.read_pid)
   end
 
   def on_toggle(&block)
@@ -22,6 +22,6 @@ module Thyme::SignalHandler
   end
 
   def send_toggle
-    Process.kill(Signal::USR1, ProcessHandler.read_pid)
+    Process.signal(Signal::USR1, ProcessHandler.read_pid)
   end
 end

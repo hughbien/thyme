@@ -8,6 +8,6 @@ targets:
   thyme:
     main: src/cli.cr
 
-crystal: 0.36.1
+crystal: 1.0.0
 
 license: BSD
