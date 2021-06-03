@@ -12,22 +12,22 @@ Thyme is a pomodoro timer for tmux.
 brew install hughbien/tap/thyme
 ```
 
-This will install Crystal 1.0.0 as a dependency. If you already this version of Crystal installed
-(not via a shim), you can run:
+This will install Crystal 1.0.0 as a dependency. If you already have this version of Crystal
+installed (not via a shim), you can run:
 
 ```
 brew install hughbien/tap/thyme --without-crystal
 ```
 
-If you have Crystal installed as a shim (via Homebrew or Asdf), you'll need to pass in the
+If you have Crystal installed as a shim (via Asdf or Homebrew), you'll need to pass in the
 additional options.
 
 ```
-# if you installed Crystal via Homebrew
-HOMEBREW_SHIM=$(brew --prefix crystal)/bin brew install hughbien/tap/thyme --without-crystal
-
 # if you installed Crystal via Asdf
 HOMEBREW_SHIM=$(asdf which crystal)/../../embedded/bin HOMEBREW_CRYSTAL_PATH=`crystal env CRYSTAL_PATH` brew install hughbien/tap/thyme --without-crystal
+
+# if you installed Crystal via Homebrew
+HOMEBREW_SHIM=$(brew --prefix crystal)/bin brew install hughbien/tap/thyme --without-crystal
 ```
 
 **Linux**
