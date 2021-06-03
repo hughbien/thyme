@@ -8,7 +8,7 @@ bin/thyme:
 	rm -f bin/thyme.dwarf
 
 build-static:
-	docker run --rm -it -v $(PWD):/workspace -w /workspace crystallang/crystal:0.36.1-alpine shards build --production --static
+	docker run --rm -it -v $(PWD):/workspace -w /workspace crystallang/crystal:1.0.0-alpine shards build --production --static
 	mv bin/thyme bin/thyme-linux-amd64
 
 install: build
