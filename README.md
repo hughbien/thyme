@@ -23,11 +23,14 @@ If you have Crystal installed as a shim (via Asdf or Homebrew), you'll need to p
 additional options.
 
 ```
+# if you installed Crystal via Homebrew
+HOMEBREW_SHIM=$(brew --prefix crystal)/bin brew install hughbien/tap/thyme --without-crystal
+
 # if you installed Crystal via Asdf
 HOMEBREW_SHIM=$(asdf which crystal)/../../embedded/bin HOMEBREW_CRYSTAL_PATH=`crystal env CRYSTAL_PATH` brew install hughbien/tap/thyme --without-crystal
 
-# if you installed Crystal via Homebrew
-HOMEBREW_SHIM=$(brew --prefix crystal)/bin brew install hughbien/tap/thyme --without-crystal
+# if you have a custom installation, pass in the directory crystal is in
+HOMEBREW_SHIM=$(which crystal)/.. HOMEBREW_CRYSTAL_PATH=`crystal env CRYSTAL_PATH` brew install hughbien/tap/thyme --without-crystal
 ```
 
 **Linux**
