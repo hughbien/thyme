@@ -13,24 +13,21 @@ brew install hughbien/tap/thyme
 ```
 
 This will install Crystal 1.0.0 as a dependency. If you already have this version of Crystal
-installed (not via a shim), you can run:
+installed (not via Homebrew), you can run:
 
 ```
 brew install hughbien/tap/thyme --without-crystal
 ```
 
-If you have Crystal installed as a shim (via Asdf or Homebrew), you'll need to pass in the
-additional options.
+If Crystal/Shard cannot be found on your system, it may be because it's shimmed or cannot be found
+by Homebrew. You'll need to pass in additional options:
 
 ```
-# if you installed Crystal via Homebrew
-HOMEBREW_SHIM=$(brew --prefix crystal)/bin brew install hughbien/tap/thyme --without-crystal
-
 # if you installed Crystal via Asdf
-HOMEBREW_SHIM=$(asdf which crystal)/../../embedded/bin HOMEBREW_CRYSTAL_PATH=`crystal env CRYSTAL_PATH` brew install hughbien/tap/thyme --without-crystal
+HOMEBREW_BIN=$(asdf which crystal)/../../embedded/bin HOMEBREW_CRYSTAL_PATH=`crystal env CRYSTAL_PATH` brew install hughbien/tap/thyme --without-crystal
 
-# if you have a custom installation, pass in the directory crystal is in
-HOMEBREW_SHIM=$(which crystal)/.. HOMEBREW_CRYSTAL_PATH=`crystal env CRYSTAL_PATH` brew install hughbien/tap/thyme --without-crystal
+# if you have a custom install
+HOMEBREW_BIN=$(which crystal)/.. brew install hughbien/tap/thyme --without-crystal
 ```
 
 **Linux**
