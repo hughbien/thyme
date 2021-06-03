@@ -20,14 +20,14 @@ brew install hughbien/tap/thyme --without-crystal
 ```
 
 If you have Crystal installed as a shim (via Homebrew or Asdf), you'll need to pass in the
-`HOMEBREW_SHIM` option. This is just the path to the actual Crystal binary, not the symbolic link.
+additional options. This includes the path to the actual Crystal binary, not the symbolic link.
 
 ```
 # if you installed Crystal via Homebrew
 HOMEBREW_SHIM=$(brew --prefix crystal)/bin/crystal brew install hughbien/tap/thyme --without-crystal
 
 # if you installed Crystal via Asdf
-HOMEBREW_SHIM=`asdf which crystal` brew install hughbien/tap/thyme --without-crystal
+HOMEBREW_SHIM=`asdf which crystal` HOMEBREW_CRYSTAL_PATH=`crystal env CRYSTAL_PATH` brew install hughbien/tap/thyme --without-crystal
 ```
 
 **Linux**

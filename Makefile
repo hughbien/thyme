@@ -1,9 +1,10 @@
 INSTALL_BIN ?= /usr/local/bin
+SHARDS ?= shards
 VERSION = $(shell cat shard.yml | grep ^version | sed -e "s/version: //")
 
 build: bin/thyme
 bin/thyme:
-	shards build --production
+	$(SHARDS) build --production
 	rm -f bin/thyme.dwarf
 
 build-static:
