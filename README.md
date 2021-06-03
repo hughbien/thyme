@@ -16,7 +16,7 @@ This will install Crystal as a dependency. If you already have this version of C
 run:
 
 ```
-SHARDS=`which shards` brew install hughbien/tap/thyme --without-crystal
+HOMEBREW_SHARDS=`which shards` brew install hughbien/tap/thyme --without-crystal
 ```
 
 **Linux**
