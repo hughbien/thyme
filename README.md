@@ -161,7 +161,6 @@ make run ARGS=-h             # to run with local arguments
 
 * optimize timer IO: only write start time (+ pauses), client side calculation, socket/fs/signal
 * at exit clean up thyme PID/TMUX file
-* handle laptop closed for long pause
 
 ## License
 

@@ -54,7 +54,7 @@ class Thyme::Timer
     on_break ? @config.hooks.before_break(hooks_args) : @config.hooks.before(hooks_args)
 
     @end_time = now + (on_break ? @config.timer_break : @config.timer)
-    while now < @end_time
+    while now < @end_time || @pause_time
       return if @stop
 
       @tmux.set_status(
